@@ -67,29 +67,69 @@ describe( "Blog Post", function() {
 
   	// Test strategy: POST
   	//  1. make a POST request with data for a new item
-  //  2. inspect response object and prove it has right
-  //  status code and that the returned object has an `id`
-  it("should add an item on POST", function() {
-    const newItem = { name: "coffee", checked: false };
-    return chai
-      .request(app)
-      .post("/blog-posts")
-      .send(newItem)
-      .then(function(res) {
-        expect(res).to.have.status(201);
-        expect(res).to.be.json;
-        expect(res.body).to.be.a("object");
-        expect(res.body).to.include.keys("title", "content", "author");
-        expect(res.body.id).to.not.equal(null);
-        // response should be deep equal to `newItem` from above if we assign
-        // `id` to it from `res.body.id`
-        // *********Still relevant? I think so...
-        expect(res.body).to.deep.equal(
-          Object.assign(newItem, { id: res.body.id })
-        );
-      });
-  });
+  	//  2. inspect response object and prove it has right
+  	//  status code and that the returned object has an `id`
+  	it("should add an item on POST", function() {
+	    const newItem = { title: "new title", content: "new content", author: "new author" };
+	    return chai
+	      .request(app)
+	      .post("/blog-posts")
+	      .send(newItem)
+	      .then(function(res) {
+	        expect(res).to.have.status(201);
+	        expect(res).to.be.json;
+	        expect(res.body).to.be.a("object");
+	        expect(res.body).to.include.keys("title", "content", "author");
+	        expect(res.body.id).to.not.equal(null);
+	        
+	        // response should be deep equal to `newItem` from above if we assign
+	        // `id` to it from `res.body.id`
+	        // *********Still relevant? I think so...
+	        expect(res.body).to.deep.equal(
+	          Object.assign(newItem, { id: res.body.id })
+	        );
+	      });
+  	});
 
   	// Test strategy: PUT
+  	it("should update items on PUT", function() {
+	    // we initialize our updateData here and then after the initial
+	    // request to the app, we update it with an `id` property so
+	    // we can make a second, PUT call to the app.
+	    // *****IS THIS RIGHT???**********
+	    const updateData = {
+	      title: "newTitle",
+	      content: "newContent",
+	      author: "newAuthor"
+	    };
+
+	    return (
+	      chai
+	        .request(app)
+	        // first have to get so we have an idea of object to update
+	        .get("/blog-posts")
+	        .then(function(res) {
+	          updateData.id = res.body[0].id;
+	          // this will return a promise whose value will be the response
+	          // object, which we can inspect in the next `then` block. Note
+	          // that we could have used a nested callback here instead of
+	          // returning a promise and chaining with `then`, but we find
+	          // this approach cleaner and easier to read and reason about.
+	          return chai
+	            .request(app)
+	            .put(`/blog-posts/${updateData.id}`)
+	            .send(updateData);
+	        })
+	        // prove that the PUT request has right status code
+	        // and returns updated item
+	        .then(function(res) {
+	          expect(res).to.have.status(200);
+	          expect(res).to.be.json;
+	          expect(res.body).to.be.a("object");
+	          expect(res.body).to.deep.equal(updateData);
+	        })
+	    );
+  	});
+
   	// Test strategy: DELETE
 });
