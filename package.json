@@ -4,7 +4,8 @@
   "description": "Thinkful blog post assignment",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,5 +13,17 @@
     "express": "^4.16.3",
     "morgan": "^1.9.0",
     "uuid": "^3.3.2"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jao05/blog-post.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jao05/blog-post/issues"
+  },
+  "homepage": "https://github.com/jao05/blog-post#readme"
 }
