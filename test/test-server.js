@@ -66,6 +66,30 @@ describe( "Blog Post", function() {
   	});
 
   	// Test strategy: POST
+  	//  1. make a POST request with data for a new item
+  //  2. inspect response object and prove it has right
+  //  status code and that the returned object has an `id`
+  it("should add an item on POST", function() {
+    const newItem = { name: "coffee", checked: false };
+    return chai
+      .request(app)
+      .post("/blog-posts")
+      .send(newItem)
+      .then(function(res) {
+        expect(res).to.have.status(201);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a("object");
+        expect(res.body).to.include.keys("title", "content", "author");
+        expect(res.body.id).to.not.equal(null);
+        // response should be deep equal to `newItem` from above if we assign
+        // `id` to it from `res.body.id`
+        // *********Still relevant? I think so...
+        expect(res.body).to.deep.equal(
+          Object.assign(newItem, { id: res.body.id })
+        );
+      });
+  });
+
   	// Test strategy: PUT
   	// Test strategy: DELETE
 });
