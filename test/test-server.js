@@ -36,7 +36,34 @@ describe( "Blog Post", function() {
   	});
 
   	// Test strategy: GET
-  	
+  	// 1. make request to `/blog-posts`
+  	// 2.
+  	// 3. 
+  	it("should list items on GET", function() {
+	    // for Mocha tests, when we're dealing with asynchronous operations,
+	    // we must either return a Promise object or else call a `done` callback
+	    // at the end of the test. The `chai.request(server).get...` call is asynchronous
+	    // and returns a Promise, so we just return it.
+    	return chai
+	      .request(app)
+	      .get("/blog-posts")
+	      .then(function(res) {
+	        expect(res).to.have.status(200);
+	        expect(res).to.be.json;
+	        expect(res.body).to.be.a("array");
+
+	        // because we create two items on app load
+	        expect(res.body.length).to.be.at.least(1);
+	        
+	        // each item should be an object with key/value pairs
+	        // for `id`, `name` and `checked`.
+	        const expectedKeys = ["title", "content", "author"];
+	        res.body.forEach(function(item) {
+	          expect(item).to.be.a("object");
+	          expect(item).to.include.keys(expectedKeys);
+	        });
+	      });
+  	});
 
   	// Test strategy: POST
   	// Test strategy: PUT
