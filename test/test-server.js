@@ -56,7 +56,7 @@ describe( "Blog Post", function() {
 	        expect(res.body.length).to.be.at.least(1);
 	        
 	        // each item should be an object with key/value pairs
-	        // for `id`, `name` and `checked`.
+	        // for `title`, `content` and `author`.
 	        const expectedKeys = ["title", "content", "author"];
 	        res.body.forEach(function(item) {
 	          expect(item).to.be.a("object");
@@ -70,7 +70,9 @@ describe( "Blog Post", function() {
   	//  2. inspect response object and prove it has right
   	//  status code and that the returned object has an `id`
   	it("should add an item on POST", function() {
-	    const newItem = { title: "new title", content: "new content", author: "new author" };
+	    
+	    // **************** Are these key/value pairs default? Placeholers? Hard coded test data? Idk...***********************
+	    const newItem = { title: "Title", content: "content", author: "Author" };
 	    return chai
 	      .request(app)
 	      .post("/blog-posts")
@@ -84,7 +86,7 @@ describe( "Blog Post", function() {
 	        
 	        // response should be deep equal to `newItem` from above if we assign
 	        // `id` to it from `res.body.id`
-	        // *********Still relevant? I think so...
+	        // *********Still relevant? I think so...but I don't completely understand
 	        expect(res.body).to.deep.equal(
 	          Object.assign(newItem, { id: res.body.id })
 	        );
@@ -122,6 +124,7 @@ describe( "Blog Post", function() {
 	        })
 	        // prove that the PUT request has right status code
 	        // and returns updated item
+	        // ****************The promise that is return above is what passed in as 'res'??*************
 	        .then(function(res) {
 	          expect(res).to.have.status(200);
 	          expect(res).to.be.json;
@@ -138,10 +141,12 @@ describe( "Blog Post", function() {
 	    return (
 	      chai
 	        .request(app)
-	        // first have to get so we have an `id` of item
+	        // first we have to get so we have an `id` of item
 	        // to delete
 	        .get("/blog-posts")
 	        .then(function(res) {
+	          
+	          // ***********This arbitrarily deletes the first item? Can be specific with a database?*************
 	          return chai.request(app).delete(`/blog-posts/${res.body[0].id}`);
 	        })
 	        .then(function(res) {
