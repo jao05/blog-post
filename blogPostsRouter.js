@@ -85,7 +85,7 @@ router.put("/:id", (req, res) => {
     return res.status(400).send(message);
   }
   console.log(`Updating blog post with id \`${req.params.id}\``);
-  BlogPosts.update({
+  let updatedPost = BlogPosts.update({
     id: req.params.id,
     title: req.body.title,
     content: req.body.content,
@@ -94,7 +94,7 @@ router.put("/:id", (req, res) => {
   });
   
 // .end()?? Here and in the DELETE...
-  res.status(204).end();
+  res.status(200).json( updatedPost );
 });
 
 // add endpoint for DELETE requests. These requests should

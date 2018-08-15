@@ -88,7 +88,7 @@ describe( "Blog Post", function() {
 	        // `id` to it from `res.body.id`
 	        // *********Still relevant? I think so...but I don't completely understand
 	        expect(res.body).to.deep.equal(
-	          Object.assign(newItem, { id: res.body.id })
+	          Object.assign(newItem, { id: res.body.id, publishDate: res.body.publishDate })
 	        );
 	      });
   	});
@@ -112,6 +112,7 @@ describe( "Blog Post", function() {
 	        .get("/blog-posts")
 	        .then(function(res) {
 	          updateData.id = res.body[0].id;
+	          updateData.publishDate = res.body[0].publishDate;
 	          // this will return a promise whose value will be the response
 	          // object, which we can inspect in the next `then` block. Note
 	          // that we could have used a nested callback here instead of
@@ -126,6 +127,7 @@ describe( "Blog Post", function() {
 	        // and returns updated item
 	        // ****************The promise that is return above is what passed in as 'res'??*************
 	        .then(function(res) {
+	          console.log(res);
 	          expect(res).to.have.status(200);
 	          expect(res).to.be.json;
 	          expect(res.body).to.be.a("object");
